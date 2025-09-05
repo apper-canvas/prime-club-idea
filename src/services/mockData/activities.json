@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "leadId": 1,
+    "type": "Call",
+    "description": "Initial discovery call - discussed requirements",
+    "date": "2024-01-15T10:30:00Z",
+    "userId": "alex.thompson"
+  },
+  {
+    "Id": 2,
+    "leadId": 2,
+    "type": "Email",
+    "description": "Sent product demo and pricing information",
+    "date": "2024-01-16T09:20:00Z",
+    "userId": "jessica.martinez"
+  },
+  {
+    "Id": 3,
+    "leadId": 3,
+    "type": "Meeting",
+    "description": "Proposal presentation to stakeholders",
+    "date": "2024-01-17T11:30:00Z",
+    "userId": "david.kim"
+  },
+  {
+    "Id": 4,
+    "leadId": 4,
+    "type": "Call",
+    "description": "Contract negotiation discussion",
+    "date": "2024-01-18T15:45:00Z",
+    "userId": "alex.thompson"
+  },
+  {
+    "Id": 5,
+    "leadId": 5,
+    "type": "Meeting",
+    "description": "Deal closing and contract signing",
+    "date": "2024-01-19T10:15:00Z",
+    "userId": "jessica.martinez"
+  }
+]

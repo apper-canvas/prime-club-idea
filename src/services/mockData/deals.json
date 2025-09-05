@@ -1,0 +1,52 @@
+[
+  {
+    "Id": 1,
+    "leadId": 3,
+    "title": "Global Ventures Partnership Deal",
+    "value": 75000,
+    "stage": "Proposal",
+    "probability": 70,
+    "closeDate": "2024-02-15T00:00:00Z",
+    "createdAt": "2024-01-08T16:45:00Z"
+  },
+  {
+    "Id": 2,
+    "leadId": 4,
+    "title": "StartupX Integration Project",
+    "value": 32000,
+    "stage": "Negotiation",
+    "probability": 85,
+    "closeDate": "2024-02-28T00:00:00Z",
+    "createdAt": "2024-01-05T11:20:00Z"
+  },
+  {
+    "Id": 3,
+    "leadId": 5,
+    "title": "Enterprise Solutions Platform",
+    "value": 89000,
+    "stage": "Closed Won",
+    "probability": 100,
+    "closeDate": "2024-01-19T00:00:00Z",
+    "createdAt": "2023-12-28T09:10:00Z"
+  },
+  {
+    "Id": 4,
+    "leadId": 8,
+    "title": "Cloud Services Migration",
+    "value": 67000,
+    "stage": "Proposal",
+    "probability": 65,
+    "closeDate": "2024-03-10T00:00:00Z",
+    "createdAt": "2024-01-10T12:00:00Z"
+  },
+  {
+    "Id": 5,
+    "leadId": 2,
+    "title": "InnovateTech Software License",
+    "value": 45000,
+    "stage": "Qualified",
+    "probability": 60,
+    "closeDate": "2024-03-20T00:00:00Z",
+    "createdAt": "2024-01-12T14:15:00Z"
+  }
+]
