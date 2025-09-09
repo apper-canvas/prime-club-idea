@@ -36,19 +36,22 @@ const Leads = () => {
     loadLeads();
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     let filtered = leads;
 
-    // Apply search filter
+    // Apply search filter - now includes new fields
     if (searchTerm) {
       filtered = filtered.filter(lead =>
-        lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lead.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lead.email.toLowerCase().includes(searchTerm.toLowerCase())
+        lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.productName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.salesRep?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lead.email?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Apply status filter
+    // Apply status filter - now includes new status options
     if (statusFilter !== "All") {
       filtered = filtered.filter(lead => lead.status === statusFilter);
     }
@@ -93,13 +96,13 @@ const Leads = () => {
           </div>
         </div>
 
-        {/* Filters */}
+{/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1">
             <SearchBar
               value={searchTerm}
               onChange={setSearchTerm}
-              placeholder="Search leads by name, company, or email..."
+              placeholder="Search by name, product, company, category, or sales rep..."
             />
           </div>
           <div className="sm:w-48">
@@ -109,12 +112,21 @@ const Leads = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-mint focus:border-mint"
             >
               <option value="All">All Status</option>
-              <option value="New">New</option>
-              <option value="Qualified">Qualified</option>
-              <option value="Proposal">Proposal</option>
+              <option value="Connected">Connected</option>
+              <option value="Locked">Locked</option>
+              <option value="Meeting Booked">Meeting Booked</option>
+              <option value="Meeting Done">Meeting Done</option>
               <option value="Negotiation">Negotiation</option>
-              <option value="Closed Won">Closed Won</option>
-              <option value="Closed Lost">Closed Lost</option>
+              <option value="Closed">Closed</option>
+              <option value="Lost">Lost</option>
+              <option value="Launched on AppSumo">Launched on AppSumo</option>
+              <option value="Launched on Prime Club">Launched on Prime Club</option>
+              <option value="Keep an Eye">Keep an Eye</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Unsubscribed">Unsubscribed</option>
+              <option value="Outdated">Outdated</option>
+              <option value="Hotlist">Hotlist</option>
+              <option value="Out of League">Out of League</option>
             </select>
           </div>
         </div>

@@ -2,13 +2,14 @@ import React from "react";
 import { cn } from "@/utils/cn";
 
 const Badge = ({ children, variant = "default", className, ...props }) => {
-  const variants = {
+const variants = {
     default: "bg-gray-100 text-gray-800",
     primary: "bg-gradient-to-r from-mint to-blue text-teal-800",
     success: "bg-gradient-to-r from-green-100 to-mint text-green-800",
     warning: "bg-gradient-to-r from-peach to-yellow-200 text-amber-800",
     danger: "bg-gradient-to-r from-pink to-red-200 text-red-800",
     info: "bg-gradient-to-r from-blue to-purple text-blue-800",
+    // Legacy status variants
     new: "bg-gradient-to-r from-mint to-blue text-teal-800",
     qualified: "bg-gradient-to-r from-blue to-purple text-blue-800",
     proposal: "bg-gradient-to-r from-peach to-yellow-200 text-amber-800",
