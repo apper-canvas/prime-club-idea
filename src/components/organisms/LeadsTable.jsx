@@ -67,7 +67,8 @@ const LeadsTable = ({ leads, onLeadUpdate, selectedLeads, onSelectionChange, sho
   });
   const [isAddingLead, setIsAddingLead] = useState(false);
   const debounceRef = useRef(null);
-  const inputRef = useRef(null);
+const inputRef = useRef(null);
+  const tableContainerRef = useRef(null);
   const formatUrl = (url) => {
     if (!url) return "";
     let formatted = url.trim();
@@ -340,8 +341,43 @@ const handleSelectAll = (checked) => {
   const isAllSelected = leads.length > 0 && selectedLeads.length === leads.length;
   const isIndeterminate = selectedLeads.length > 0 && selectedLeads.length < leads.length;
 
+// Add horizontal mouse wheel scrolling
+  useEffect(() => {
+    const container = tableContainerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e) => {
+      // Check if horizontal scrolling is possible
+      const canScrollHorizontally = container.scrollWidth > container.clientWidth;
+      
+      if (canScrollHorizontally && (e.deltaY !== 0)) {
+        e.preventDefault();
+        
+        // Convert vertical wheel movement to horizontal scroll
+        const scrollAmount = e.deltaY;
+        const newScrollLeft = container.scrollLeft + scrollAmount;
+        
+        // Smooth scroll to new position
+        container.scrollTo({
+          left: newScrollLeft,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   return (
-    <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+    <div 
+      ref={tableContainerRef}
+      className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+      style={{ scrollBehavior: 'smooth' }}
+    >
       <table className="min-w-full divide-y divide-gray-300">
         <thead className="bg-gradient-to-r from-mint to-blue">
           <tr>
