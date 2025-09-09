@@ -64,11 +64,12 @@ const LeadsTable = ({ leads, onLeadUpdate, selectedLeads, onSelectionChange, sho
     edition: "",
     salesRep: "",
     followUpReminder: ""
-  });
+});
   const [isAddingLead, setIsAddingLead] = useState(false);
+  const inputRef = useRef(null);
   const debounceRef = useRef(null);
-const inputRef = useRef(null);
   const tableContainerRef = useRef(null);
+
   const formatUrl = (url) => {
     if (!url) return "";
     let formatted = url.trim();
@@ -76,6 +77,25 @@ const inputRef = useRef(null);
       formatted = "https://" + formatted;
     }
     return formatted.replace(/\/$/, "");
+  };
+
+  const handleEditLead = (lead) => {
+    // Start editing the first editable field (productName)
+    startEdit(lead.Id, 'productName', lead.productName);
+  };
+
+  const handleDeleteLead = async (lead) => {
+    if (window.confirm(`Are you sure you want to delete the lead "${lead.name}"?`)) {
+      try {
+        await leadService.delete(lead.Id);
+        toast.success('Lead deleted successfully');
+        // Remove from local state by updating parent
+        onLeadUpdate({ ...lead, _deleted: true });
+      } catch (error) {
+        console.error('Error deleting lead:', error);
+        toast.error('Failed to delete lead');
+      }
+    }
   };
 
   const generateLinkedInUrl = (websiteUrl) => {
@@ -429,8 +449,11 @@ const handleSelectAll = (checked) => {
             <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">
               Sales Rep
             </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-28">
+<th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-28">
               Follow-up
+            </th>
+            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">
+              Actions
             </th>
           </tr>
         </thead>
@@ -609,8 +632,28 @@ const handleSelectAll = (checked) => {
               <td className="px-3 py-2 text-sm">{renderCell(lead, 'status', lead.status, 'text', STATUS_OPTIONS)}</td>
               <td className="px-3 py-2 text-sm">{renderCell(lead, 'fundingType', lead.fundingType, 'text', FUNDING_TYPES)}</td>
               <td className="px-3 py-2 text-sm">{renderCell(lead, 'edition', lead.edition, 'text', EDITIONS)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'salesRep', lead.salesRep)}</td>
+<td className="px-3 py-2 text-sm">{renderCell(lead, 'salesRep', lead.salesRep)}</td>
               <td className="px-3 py-2 text-sm">{renderCell(lead, 'followUpReminder', lead.followUpReminder, 'date')}</td>
+              <td className="px-3 py-2 text-sm">
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleEditLead(lead)}
+                    className="h-8 w-8 p-0 text-gray-600 hover:text-teal-600"
+                  >
+                    <ApperIcon name="Edit" size={16} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDeleteLead(lead)}
+                    className="h-8 w-8 p-0 text-gray-600 hover:text-red-600"
+                  >
+                    <ApperIcon name="Trash2" size={16} />
+                  </Button>
+                </div>
+              </td>
             </motion.tr>
           ))}
         </tbody>

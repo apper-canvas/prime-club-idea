@@ -67,9 +67,16 @@ if (searchTerm) {
   }, [leads, searchTerm, statusFilter]);
 
 const handleLeadUpdate = (updatedLead) => {
-    setLeads(prev => prev.map(lead => 
-      lead.Id === updatedLead.Id ? updatedLead : lead
-    ));
+    if (updatedLead._deleted) {
+      // Remove deleted lead from state
+      setLeads(prev => prev.filter(lead => lead.Id !== updatedLead.Id));
+      setFilteredLeads(prev => prev.filter(lead => lead.Id !== updatedLead.Id));
+    } else {
+      // Update existing lead
+      setLeads(prev => prev.map(lead => 
+        lead.Id === updatedLead.Id ? updatedLead : lead
+      ));
+    }
   };
 
   const handleBulkDelete = async () => {
@@ -454,16 +461,15 @@ const handleLeadUpdate = (updatedLead) => {
           />
         ) : (
           <>
-            <div className="px-6 py-4 border-b border-gray-200">
-              <p className="text-sm text-gray-600">
-                Showing {filteredLeads.length} of {leads.length} leads
-                {selectedLeads.length > 0 && (
-                  <span className="ml-2 text-mint font-medium">
-                    ({selectedLeads.length} selected)
+{selectedLeads.length > 0 && (
+              <div className="px-6 py-4 border-b border-gray-200">
+                <p className="text-sm text-gray-600">
+                  <span className="text-mint font-medium">
+                    {selectedLeads.length} selected
                   </span>
-                )}
-              </p>
-            </div>
+                </p>
+              </div>
+            )}
             <LeadsTable 
               leads={filteredLeads} 
               onLeadUpdate={handleLeadUpdate}
