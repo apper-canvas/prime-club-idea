@@ -380,7 +380,22 @@ const handleSelectAll = (checked) => {
     >
       <table className="min-w-full divide-y divide-gray-300">
         <thead className="bg-gradient-to-r from-mint to-blue">
-          <tr>
+<tr>
+            {showBulkActions && (
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider w-12">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={isAllSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = isIndeterminate;
+                    }}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded"
+                  />
+                </div>
+              </th>
+            )}
             <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-32">
               Product Name
             </th>
@@ -419,24 +434,13 @@ const handleSelectAll = (checked) => {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
-{showBulkActions && (
-              <th className="px-3 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    ref={(el) => {
-                      if (el) el.indeterminate = isIndeterminate;
-                    }}
-                    onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded"
-                  />
-                </div>
-              </th>
-            )}
+        <tbody className="bg-white divide-y divide-gray-200">
             {/* Empty row for direct entry */}
-          <tr className="bg-white">
+<tr className="bg-white">
+            {showBulkActions && (
+              <td className="px-3 py-2 text-sm w-12">
+              </td>
+            )}
             <td className="px-3 py-2 text-sm">
               <input
                 type="text"
@@ -585,8 +589,8 @@ const handleSelectAll = (checked) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: (index + 1) * 0.03 }}
             >
-              {showBulkActions && (
-                <td className="px-3 py-2 text-sm">
+{showBulkActions && (
+                <td className="px-3 py-2 text-sm w-12">
                   <input
                     type="checkbox"
                     checked={selectedLeads.includes(lead.Id)}
