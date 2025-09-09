@@ -16,7 +16,8 @@ const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
+const [statusFilter, setStatusFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("All");
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [multiUrlInput, setMultiUrlInput] = useState("");
   const [showMultiUrlInput, setShowMultiUrlInput] = useState(false);
@@ -42,7 +43,7 @@ useEffect(() => {
     let filtered = leads;
 
     // Apply search filter - now includes new fields
-    if (searchTerm) {
+if (searchTerm) {
       filtered = filtered.filter(lead =>
         lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lead.productName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -56,6 +57,10 @@ useEffect(() => {
     // Apply status filter - now includes new status options
     if (statusFilter !== "All") {
       filtered = filtered.filter(lead => lead.status === statusFilter);
+    }
+// Filter by category
+    if (categoryFilter !== "All") {
+      filtered = filtered.filter(lead => lead.category === categoryFilter);
     }
 
     setFilteredLeads(filtered);
@@ -207,6 +212,150 @@ const handleLeadUpdate = (updatedLead) => {
               onChange={setSearchTerm}
               placeholder="Search by name, product, company, category, or sales rep..."
             />
+          </div>
+<div className="sm:w-48">
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-mint focus:border-mint"
+            >
+              <option value="All">All Categories</option>
+              <option value="Form Builder">Form Builder</option>
+              <option value="CRM">CRM</option>
+              <option value="Project Management">Project Management</option>
+              <option value="Affiliate Management">Affiliate Management</option>
+              <option value="Help Desk">Help Desk</option>
+              <option value="Live Chat">Live Chat</option>
+              <option value="Graphic Design">Graphic Design</option>
+              <option value="WordPress Plugin">WordPress Plugin</option>
+              <option value="VPN">VPN</option>
+              <option value="Landing Page Builder">Landing Page Builder</option>
+              <option value="Meeting Assistant">Meeting Assistant</option>
+              <option value="Course Builder">Course Builder</option>
+              <option value="Sales Funnel Builder">Sales Funnel Builder</option>
+              <option value="AI Writing Assistant">AI Writing Assistant</option>
+              <option value="Transcription Software">Transcription Software</option>
+              <option value="Email Marketing">Email Marketing</option>
+              <option value="Social Media Management">Social Media Management</option>
+              <option value="SEO Tools">SEO Tools</option>
+              <option value="Website Builder">Website Builder</option>
+              <option value="E-commerce Platform">E-commerce Platform</option>
+              <option value="Inventory Management">Inventory Management</option>
+              <option value="Accounting Software">Accounting Software</option>
+              <option value="HR Management">HR Management</option>
+              <option value="Payroll Software">Payroll Software</option>
+              <option value="Time Tracking">Time Tracking</option>
+              <option value="Video Conferencing">Video Conferencing</option>
+              <option value="File Sharing">File Sharing</option>
+              <option value="Cloud Storage">Cloud Storage</option>
+              <option value="Backup Solutions">Backup Solutions</option>
+              <option value="Security Software">Security Software</option>
+              <option value="Password Manager">Password Manager</option>
+              <option value="VPN Service">VPN Service</option>
+              <option value="Antivirus">Antivirus</option>
+              <option value="Firewall">Firewall</option>
+              <option value="Website Monitoring">Website Monitoring</option>
+              <option value="Analytics Tools">Analytics Tools</option>
+              <option value="Heatmap Software">Heatmap Software</option>
+              <option value="A/B Testing">A/B Testing</option>
+              <option value="Survey Tools">Survey Tools</option>
+              <option value="Feedback Management">Feedback Management</option>
+              <option value="Customer Support">Customer Support</option>
+              <option value="Ticketing System">Ticketing System</option>
+              <option value="Knowledge Base">Knowledge Base</option>
+              <option value="FAQ Software">FAQ Software</option>
+              <option value="Chatbot Platform">Chatbot Platform</option>
+              <option value="Marketing Automation">Marketing Automation</option>
+              <option value="Lead Generation">Lead Generation</option>
+              <option value="CRM Integration">CRM Integration</option>
+              <option value="Sales Analytics">Sales Analytics</option>
+              <option value="Pipeline Management">Pipeline Management</option>
+              <option value="Invoice Software">Invoice Software</option>
+              <option value="Expense Tracking">Expense Tracking</option>
+              <option value="Financial Planning">Financial Planning</option>
+              <option value="Tax Software">Tax Software</option>
+              <option value="Banking Tools">Banking Tools</option>
+              <option value="Recruitment Software">Recruitment Software</option>
+              <option value="Applicant Tracking">Applicant Tracking</option>
+              <option value="Employee Onboarding">Employee Onboarding</option>
+              <option value="Performance Management">Performance Management</option>
+              <option value="Learning Management">Learning Management</option>
+              <option value="Content Management">Content Management</option>
+              <option value="Blog Platform">Blog Platform</option>
+              <option value="Newsletter Software">Newsletter Software</option>
+              <option value="Podcast Hosting">Podcast Hosting</option>
+              <option value="Video Hosting">Video Hosting</option>
+              <option value="Design Tools">Design Tools</option>
+              <option value="Photo Editor">Photo Editor</option>
+              <option value="Vector Graphics">Vector Graphics</option>
+              <option value="Presentation Software">Presentation Software</option>
+              <option value="Wireframing Tools">Wireframing Tools</option>
+              <option value="Code Editor">Code Editor</option>
+              <option value="Version Control">Version Control</option>
+              <option value="API Management">API Management</option>
+              <option value="Database Tools">Database Tools</option>
+              <option value="Server Monitoring">Server Monitoring</option>
+              <option value="Mobile App Builder">Mobile App Builder</option>
+              <option value="Push Notifications">Push Notifications</option>
+              <option value="App Analytics">App Analytics</option>
+              <option value="Beta Testing">Beta Testing</option>
+              <option value="App Store Optimization">App Store Optimization</option>
+              <option value="Booking Software">Booking Software</option>
+              <option value="Appointment Scheduling">Appointment Scheduling</option>
+              <option value="Calendar Management">Calendar Management</option>
+              <option value="Event Planning">Event Planning</option>
+              <option value="Reservation System">Reservation System</option>
+              <option value="Shipping Software">Shipping Software</option>
+              <option value="Logistics Management">Logistics Management</option>
+              <option value="Supply Chain">Supply Chain</option>
+              <option value="Warehouse Management">Warehouse Management</option>
+              <option value="Delivery Tracking">Delivery Tracking</option>
+              <option value="Review Management">Review Management</option>
+              <option value="Reputation Monitoring">Reputation Monitoring</option>
+              <option value="Brand Management">Brand Management</option>
+              <option value="Influencer Marketing">Influencer Marketing</option>
+              <option value="Affiliate Tracking">Affiliate Tracking</option>
+              <option value="Membership Software">Membership Software</option>
+              <option value="Subscription Management">Subscription Management</option>
+              <option value="Billing Automation">Billing Automation</option>
+              <option value="Payment Processing">Payment Processing</option>
+              <option value="Donation Platform">Donation Platform</option>
+              <option value="Real Estate CRM">Real Estate CRM</option>
+              <option value="Property Management">Property Management</option>
+              <option value="MLS Integration">MLS Integration</option>
+              <option value="Virtual Tours">Virtual Tours</option>
+              <option value="Lead Capture">Lead Capture</option>
+              <option value="Medical Practice">Medical Practice</option>
+              <option value="Patient Management">Patient Management</option>
+              <option value="Telemedicine">Telemedicine</option>
+              <option value="Health Records">Health Records</option>
+              <option value="Appointment Booking">Appointment Booking</option>
+              <option value="Legal Practice">Legal Practice</option>
+              <option value="Case Management">Case Management</option>
+              <option value="Document Automation">Document Automation</option>
+              <option value="Time Billing">Time Billing</option>
+              <option value="Client Portal">Client Portal</option>
+              <option value="Restaurant POS">Restaurant POS</option>
+              <option value="Menu Management">Menu Management</option>
+              <option value="Online Ordering">Online Ordering</option>
+              <option value="Delivery Management">Delivery Management</option>
+              <option value="Kitchen Display">Kitchen Display</option>
+              <option value="Retail POS">Retail POS</option>
+              <option value="Inventory Control">Inventory Control</option>
+              <option value="Customer Loyalty">Customer Loyalty</option>
+              <option value="Gift Cards">Gift Cards</option>
+              <option value="Multi-location Management">Multi-location Management</option>
+              <option value="Fitness Management">Fitness Management</option>
+              <option value="Class Scheduling">Class Scheduling</option>
+              <option value="Member Check-in">Member Check-in</option>
+              <option value="Personal Training">Personal Training</option>
+              <option value="Nutrition Tracking">Nutrition Tracking</option>
+              <option value="Education Platform">Education Platform</option>
+              <option value="Student Management">Student Management</option>
+              <option value="Grade Book">Grade Book</option>
+              <option value="Parent Communication">Parent Communication</option>
+              <option value="Online Learning">Online Learning</option>
+            </select>
           </div>
           <div className="sm:w-48">
             <select
