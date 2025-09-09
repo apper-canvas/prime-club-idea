@@ -69,13 +69,32 @@ async update(id, updates) {
     return { ...leads[index] };
   },
 
-  async delete(id) {
+async delete(id) {
     await delay(300);
     const index = leads.findIndex(l => l.Id === parseInt(id));
     if (index === -1) throw new Error("Lead not found");
     
     const deletedLead = leads.splice(index, 1)[0];
     return { ...deletedLead };
+  },
+
+  async bulkDelete(ids) {
+    await delay(400);
+    const idsToDelete = ids.map(id => parseInt(id));
+    const deletedLeads = [];
+    
+    // Remove leads in reverse order to maintain indices
+    for (let i = leads.length - 1; i >= 0; i--) {
+      if (idsToDelete.includes(leads[i].Id)) {
+        deletedLeads.push(leads.splice(i, 1)[0]);
+      }
+    }
+    
+    if (deletedLeads.length !== ids.length) {
+      throw new Error("Some leads could not be found");
+    }
+    
+    return deletedLeads.reverse();
   },
 
   async updateStatus(id, status, stage) {

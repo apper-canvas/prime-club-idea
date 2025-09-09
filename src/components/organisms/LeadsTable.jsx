@@ -5,7 +5,7 @@ import { leadService } from "@/services/api/leadService";
 import ApperIcon from "@/components/ApperIcon";
 import Input from "@/components/atoms/Input";
 import Badge from "@/components/atoms/Badge";
-
+import Button from "@/components/atoms/Button";
 const BUSINESS_CATEGORIES = [
   "Form Builder", "CRM", "Project Management", "Affiliate Management", "Help Desk", "Live Chat", 
   "Graphic Design", "WordPress Plugin", "VPN", "Landing Page Builder", "Meeting Assistant", 
@@ -48,7 +48,7 @@ const FUNDING_TYPES = ["Bootstrapped", "Pre-seed", "Y Combinator", "Angel", "Ser
 
 const EDITIONS = ["Select Edition", "Black Edition", "Collector's Edition", "Limited Edition"];
 
-const LeadsTable = ({ leads, onLeadUpdate }) => {
+const LeadsTable = ({ leads, onLeadUpdate, selectedLeads, onSelectionChange, showBulkActions = false }) => {
   const [editingCell, setEditingCell] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [newLead, setNewLead] = useState({
@@ -68,7 +68,6 @@ const LeadsTable = ({ leads, onLeadUpdate }) => {
   const [isAddingLead, setIsAddingLead] = useState(false);
   const debounceRef = useRef(null);
   const inputRef = useRef(null);
-
   const formatUrl = (url) => {
     if (!url) return "";
     let formatted = url.trim();
@@ -322,6 +321,25 @@ const LeadsTable = ({ leads, onLeadUpdate }) => {
     );
   };
 
+const handleSelectAll = (checked) => {
+    if (checked) {
+      onSelectionChange(leads.map(lead => lead.Id));
+    } else {
+      onSelectionChange([]);
+    }
+  };
+
+  const handleSelectLead = (leadId, checked) => {
+    if (checked) {
+      onSelectionChange([...selectedLeads, leadId]);
+    } else {
+      onSelectionChange(selectedLeads.filter(id => id !== leadId));
+    }
+  };
+
+  const isAllSelected = leads.length > 0 && selectedLeads.length === leads.length;
+  const isIndeterminate = selectedLeads.length > 0 && selectedLeads.length < leads.length;
+
   return (
     <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
       <table className="min-w-full divide-y divide-gray-300">
@@ -366,7 +384,22 @@ const LeadsTable = ({ leads, onLeadUpdate }) => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-          {/* Empty row for direct entry */}
+{showBulkActions && (
+              <th className="px-3 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={isAllSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = isIndeterminate;
+                    }}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded"
+                  />
+                </div>
+              </th>
+            )}
+            {/* Empty row for direct entry */}
           <tr className="bg-white">
             <td className="px-3 py-2 text-sm">
               <input
@@ -508,7 +541,7 @@ const LeadsTable = ({ leads, onLeadUpdate }) => {
           </tr>
 
           {/* Existing leads */}
-          {leads.map((lead, index) => (
+{leads.map((lead, index) => (
             <motion.tr
               key={lead.Id}
               className="bg-gray-50 hover:bg-gray-100"
@@ -516,6 +549,16 @@ const LeadsTable = ({ leads, onLeadUpdate }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: (index + 1) * 0.03 }}
             >
+              {showBulkActions && (
+                <td className="px-3 py-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={selectedLeads.includes(lead.Id)}
+                    onChange={(e) => handleSelectLead(lead.Id, e.target.checked)}
+                    className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded"
+                  />
+                </td>
+              )}
               <td className="px-3 py-2 text-sm">{renderCell(lead, 'productName', lead.productName)}</td>
               <td className="px-3 py-2 text-sm">{renderCell(lead, 'name', lead.name)}</td>
               <td className="px-3 py-2 text-sm">{renderCell(lead, 'websiteUrl', lead.websiteUrl)}</td>
