@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import LeadModal from "@/components/molecules/LeadModal";
+import { leadService } from "@/services/api/leadService";
+import App from "@/App";
+import ApperIcon from "@/components/ApperIcon";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 import SearchBar from "@/components/molecules/SearchBar";
 import Button from "@/components/atoms/Button";
 import LeadsTable from "@/components/organisms/LeadsTable";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
-import { leadService } from "@/services/api/leadService";
+import Analytics from "@/components/pages/Analytics";
+import Calendar from "@/components/pages/Calendar";
+import Hotlist from "@/components/pages/Hotlist";
 
 const Leads = () => {
 const [leads, setLeads] = useState([]);
@@ -21,6 +26,9 @@ const [statusFilter, setStatusFilter] = useState("All");
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [multiUrlInput, setMultiUrlInput] = useState("");
   const [showMultiUrlInput, setShowMultiUrlInput] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [editingLead, setEditingLead] = useState(null);
+  const [modalMode, setModalMode] = useState('create');
   const loadLeads = async () => {
     try {
       setError(null);
@@ -173,8 +181,31 @@ const handleLeadUpdate = (updatedLead) => {
     }
   };
 
-  const handleAddLead = () => {
-    toast.info("Add lead functionality would open a modal here");
+const handleAddLead = () => {
+    setModalMode('create');
+    setEditingLead(null);
+    setShowModal(true);
+  };
+
+  const handleEditLead = (lead) => {
+    setModalMode('edit');
+    setEditingLead(lead);
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    setEditingLead(null);
+  };
+
+  const handleLeadSaved = (savedLead) => {
+    if (modalMode === 'create') {
+      setLeads(prev => [...prev, savedLead]);
+    } else {
+      setLeads(prev => prev.map(lead => 
+        lead.Id === savedLead.Id ? savedLead : lead
+      ));
+    }
   };
 
   const handleExport = () => {
@@ -184,7 +215,7 @@ const handleLeadUpdate = (updatedLead) => {
   if (loading) return <Loading type="table" />;
   if (error) return <Error message={error} onRetry={loadLeads} />;
 
-  return (
+return (
 <div className="p-6">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
@@ -460,8 +491,8 @@ const handleLeadUpdate = (updatedLead) => {
             icon="Users"
           />
         ) : (
-          <>
-{selectedLeads.length > 0 && (
+<>
+            {selectedLeads.length > 0 && (
               <div className="px-6 py-4 border-b border-gray-200">
                 <p className="text-sm text-gray-600">
                   <span className="text-mint font-medium">
@@ -476,10 +507,19 @@ const handleLeadUpdate = (updatedLead) => {
               selectedLeads={selectedLeads}
               onSelectionChange={setSelectedLeads}
               showBulkActions={true}
+              onEditLead={handleEditLead}
             />
           </>
         )}
       </div>
+
+      <LeadModal
+        isOpen={showModal}
+        onClose={handleModalClose}
+        lead={editingLead}
+        mode={modalMode}
+        onLeadSaved={handleLeadSaved}
+      />
     </div>
   );
 };

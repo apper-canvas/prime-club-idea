@@ -48,7 +48,7 @@ const FUNDING_TYPES = ["Bootstrapped", "Pre-seed", "Y Combinator", "Angel", "Ser
 
 const EDITIONS = ["Select Edition", "Black Edition", "Collector's Edition", "Limited Edition"];
 
-const LeadsTable = ({ leads, onLeadUpdate, selectedLeads, onSelectionChange, showBulkActions = false }) => {
+const LeadsTable = ({ leads, onLeadUpdate, selectedLeads, onSelectionChange, showBulkActions = false, onEditLead }) => {
   const [editingCell, setEditingCell] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [newLead, setNewLead] = useState({
@@ -79,9 +79,8 @@ const LeadsTable = ({ leads, onLeadUpdate, selectedLeads, onSelectionChange, sho
     return formatted.replace(/\/$/, "");
   };
 
-  const handleEditLead = (lead) => {
-    // Start editing the first editable field (productName)
-    startEdit(lead.Id, 'productName', lead.productName);
+const handleEditLead = (lead) => {
+    onEditLead?.(lead);
   };
 
   const handleDeleteLead = async (lead) => {
