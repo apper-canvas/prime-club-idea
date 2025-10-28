@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { leadService } from "@/services/api/leadService";
 import ApperIcon from "@/components/ApperIcon";
-import Input from "@/components/atoms/Input";
 import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
 const BUSINESS_CATEGORIES = [
   "Form Builder", "CRM", "Project Management", "Affiliate Management", "Help Desk", "Live Chat", 
   "Graphic Design", "WordPress Plugin", "VPN", "Landing Page Builder", "Meeting Assistant", 
@@ -343,7 +343,7 @@ const handleEditLead = (lead) => {
 
 const handleSelectAll = (checked) => {
     if (checked) {
-      onSelectionChange(leads.map(lead => lead.Id));
+      onSelectionChange((leads || []).map(lead => lead.Id));
     } else {
       onSelectionChange([]);
     }
@@ -355,11 +355,12 @@ const handleSelectAll = (checked) => {
     } else {
       onSelectionChange(selectedLeads.filter(id => id !== leadId));
     }
-  };
-
-  const isAllSelected = leads.length > 0 && selectedLeads.length === leads.length;
-  const isIndeterminate = selectedLeads.length > 0 && selectedLeads.length < leads.length;
-
+};
+ 
+  const safeLeads = leads || [];
+  const safeSelectedLeads = selectedLeads || [];
+  const isAllSelected = safeLeads.length > 0 && safeSelectedLeads.length === safeLeads.length;
+  const isIndeterminate = safeSelectedLeads.length > 0 && safeSelectedLeads.length < safeLeads.length;
 // Add horizontal mouse wheel scrolling
   useEffect(() => {
     const container = tableContainerRef.current;
@@ -392,272 +393,278 @@ const handleSelectAll = (checked) => {
   }, []);
 
   return (
-    <div 
-      ref={tableContainerRef}
-      className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
-      style={{ scrollBehavior: 'smooth' }}
-    >
-      <table className="min-w-full divide-y divide-gray-300">
+    <div
+    ref={tableContainerRef}
+    className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
+    style={{
+        scrollBehavior: "smooth"
+    }}>
+    <table className="min-w-full divide-y divide-gray-300">
         <thead className="bg-gradient-to-r from-mint to-blue">
-<tr>
-            {showBulkActions && (
-              <th className="px-3 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider w-12">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    ref={(el) => {
-                      if (el) el.indeterminate = isIndeterminate;
-                    }}
-                    onChange={(e) => handleSelectAll(e.target.checked)}
-                    className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded"
-                  />
-                </div>
-              </th>
-            )}
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-32">
-              Product Name
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">
-              Name
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-40">
-              Website URL
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-20">
-              Team Size
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-20">
-              ARR (M)
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-32">
-              Category
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-40">
-              LinkedIn URL
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-28">
-              Status
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">
-              Funding
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-32">
-              Edition
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">
-              Sales Rep
-            </th>
-<th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-28">
-              Follow-up
-            </th>
-            <th className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">
-              Actions
-            </th>
-          </tr>
+            <tr>
+                {showBulkActions && <th
+                    className="px-3 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider w-12">
+                    <div className="flex items-center">
+                        <input
+                            type="checkbox"
+                            checked={isAllSelected}
+                            ref={el => {
+                                if (el)
+                                    el.indeterminate = isIndeterminate;
+                            }}
+                            onChange={e => handleSelectAll(e.target.checked)}
+                            className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded" />
+                    </div>
+                </th>}
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-32">Product Name
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">Name
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-40">Website URL
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-20">Team Size
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-20">ARR (M)
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-32">Category
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-40">LinkedIn URL
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-28">Status
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">Funding
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-32">Edition
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">Sales Rep
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-28">Follow-up
+                                </th>
+                <th
+                    className="px-3 py-3 text-left text-xs font-medium text-teal-800 uppercase tracking-wider min-w-24">Actions
+                                </th>
+            </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
             {/* Empty row for direct entry */}
-<tr className="bg-white">
-            {showBulkActions && (
-              <td className="px-3 py-2 text-sm w-12">
-              </td>
-            )}
-            <td className="px-3 py-2 text-sm">
-              <input
-                type="text"
-                value={newLead.productName}
-                onChange={(e) => setNewLead({...newLead, productName: e.target.value})}
-                placeholder="Product name"
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              />
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <input
-                type="text"
-                value={newLead.name}
-                onChange={(e) => setNewLead({...newLead, name: e.target.value})}
-                placeholder="Name"
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              />
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <input
-                type="text"
-                value={newLead.websiteUrl}
-                onChange={(e) => {
-                  const url = e.target.value;
-                  setNewLead({
-                    ...newLead, 
-                    websiteUrl: url,
-                    linkedinUrl: url ? generateLinkedInUrl(formatUrl(url)) : ""
-                  });
-                }}
-                placeholder="Website URL"
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              />
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <select
-                value={newLead.teamSize}
-                onChange={(e) => setNewLead({...newLead, teamSize: e.target.value})}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              >
-                <option value="">Team Size</option>
-                {TEAM_SIZES.map(size => (
-                  <option key={size} value={size}>{size}</option>
-                ))}
-              </select>
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <input
-                type="number"
-                step="0.1"
-                value={newLead.arr}
-                onChange={(e) => setNewLead({...newLead, arr: e.target.value})}
-                placeholder="ARR (M)"
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              />
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <select
-                value={newLead.category}
-                onChange={(e) => setNewLead({...newLead, category: e.target.value})}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              >
-                <option value="">Category</option>
-                {BUSINESS_CATEGORIES.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-            </td>
-            <td className="px-3 py-2 text-sm text-gray-500">
-              {newLead.linkedinUrl && (
-                <a href={newLead.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline truncate block">
-                  {newLead.linkedinUrl.replace(/^https?:\/\//, '')}
-                </a>
-              )}
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <select
-                value={newLead.status}
-                onChange={(e) => setNewLead({...newLead, status: e.target.value})}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              >
-                <option value="">Status</option>
-                {STATUS_OPTIONS.map(status => (
-                  <option key={status} value={status}>{status}</option>
-                ))}
-              </select>
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <select
-                value={newLead.fundingType}
-                onChange={(e) => setNewLead({...newLead, fundingType: e.target.value})}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              >
-                <option value="">Funding</option>
-                {FUNDING_TYPES.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <select
-                value={newLead.edition}
-                onChange={(e) => setNewLead({...newLead, edition: e.target.value})}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              >
-                {EDITIONS.map(edition => (
-                  <option key={edition} value={edition}>{edition}</option>
-                ))}
-              </select>
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <input
-                type="text"
-                value={newLead.salesRep}
-                onChange={(e) => setNewLead({...newLead, salesRep: e.target.value})}
-                placeholder="Sales Rep"
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-              />
-            </td>
-            <td className="px-3 py-2 text-sm">
-              <div className="flex gap-1">
-                <input
-                  type="date"
-                  value={newLead.followUpReminder}
-                  onChange={(e) => setNewLead({...newLead, followUpReminder: e.target.value})}
-                  className="flex-1 px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint"
-                />
-                <button
-                  onClick={handleAddLead}
-                  disabled={isAddingLead || !newLead.productName || !newLead.name}
-                  className="px-2 py-1 text-xs bg-mint text-teal-800 rounded hover:bg-mint/80 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                >
-                  <ApperIcon name="Plus" size={12} />
-                  Add
-                </button>
-              </div>
-            </td>
-          </tr>
-
-          {/* Existing leads */}
-{leads.map((lead, index) => (
-            <motion.tr
-              key={lead.Id}
-              className="bg-gray-50 hover:bg-gray-100"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: (index + 1) * 0.03 }}
-            >
-{showBulkActions && (
-                <td className="px-3 py-2 text-sm w-12">
-                  <input
-                    type="checkbox"
-                    checked={selectedLeads.includes(lead.Id)}
-                    onChange={(e) => handleSelectLead(lead.Id, e.target.checked)}
-                    className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded"
-                  />
+            <tr className="bg-white">
+                {showBulkActions && <td className="px-3 py-2 text-sm w-12">
+                </td>}
+                <td className="px-3 py-2 text-sm">
+                    <input
+                        type="text"
+                        value={newLead.productName}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            productName: e.target.value
+                        })}
+                        placeholder="Product name"
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint" />
                 </td>
-              )}
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'productName', lead.productName)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'name', lead.name)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'websiteUrl', lead.websiteUrl)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'teamSize', lead.teamSize, 'text', TEAM_SIZES)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'arr', lead.arr, 'number')}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'category', lead.category, 'text', BUSINESS_CATEGORIES)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'linkedinUrl', lead.linkedinUrl)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'status', lead.status, 'text', STATUS_OPTIONS)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'fundingType', lead.fundingType, 'text', FUNDING_TYPES)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'edition', lead.edition, 'text', EDITIONS)}</td>
-<td className="px-3 py-2 text-sm">{renderCell(lead, 'salesRep', lead.salesRep)}</td>
-              <td className="px-3 py-2 text-sm">{renderCell(lead, 'followUpReminder', lead.followUpReminder, 'date')}</td>
-              <td className="px-3 py-2 text-sm">
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleEditLead(lead)}
-                    className="h-8 w-8 p-0 text-gray-600 hover:text-teal-600"
-                  >
-                    <ApperIcon name="Edit" size={16} />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDeleteLead(lead)}
-                    className="h-8 w-8 p-0 text-gray-600 hover:text-red-600"
-                  >
-                    <ApperIcon name="Trash2" size={16} />
-                  </Button>
-                </div>
-              </td>
-            </motion.tr>
-          ))}
+                <td className="px-3 py-2 text-sm">
+                    <input
+                        type="text"
+                        value={newLead.name}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            name: e.target.value
+                        })}
+                        placeholder="Name"
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint" />
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <input
+                        type="text"
+                        value={newLead.websiteUrl}
+                        onChange={e => {
+                            const url = e.target.value;
+
+                            setNewLead({
+                                ...newLead,
+                                websiteUrl: url,
+                                linkedinUrl: url ? generateLinkedInUrl(formatUrl(url)) : ""
+                            });
+                        }}
+                        placeholder="Website URL"
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint" />
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <select
+                        value={newLead.teamSize}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            teamSize: e.target.value
+                        })}
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint">
+                        <option value="">Team Size</option>
+                        {TEAM_SIZES.map(size => <option key={size} value={size}>{size}</option>)}
+                    </select>
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <input
+                        type="number"
+                        step="0.1"
+                        value={newLead.arr}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            arr: e.target.value
+                        })}
+                        placeholder="ARR (M)"
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint" />
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <select
+                        value={newLead.category}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            category: e.target.value
+                        })}
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint">
+                        <option value="">Category</option>
+                        {BUSINESS_CATEGORIES.map(category => <option key={category} value={category}>{category}</option>)}
+                    </select>
+                </td>
+                <td className="px-3 py-2 text-sm text-gray-500">
+                    {newLead.linkedinUrl && <a
+                        href={newLead.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 underline truncate block">
+                        {newLead.linkedinUrl.replace(/^https?:\/\//, "")}
+                    </a>}
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <select
+                        value={newLead.status}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            status: e.target.value
+                        })}
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint">
+                        <option value="">Status</option>
+                        {STATUS_OPTIONS.map(status => <option key={status} value={status}>{status}</option>)}
+                    </select>
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <select
+                        value={newLead.fundingType}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            fundingType: e.target.value
+                        })}
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint">
+                        <option value="">Funding</option>
+                        {FUNDING_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
+                    </select>
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <select
+                        value={newLead.edition}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            edition: e.target.value
+                        })}
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint">
+                        {EDITIONS.map(edition => <option key={edition} value={edition}>{edition}</option>)}
+                    </select>
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <input
+                        type="text"
+                        value={newLead.salesRep}
+                        onChange={e => setNewLead({
+                            ...newLead,
+                            salesRep: e.target.value
+                        })}
+                        placeholder="Sales Rep"
+                        className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint" />
+                </td>
+                <td className="px-3 py-2 text-sm">
+                    <div className="flex gap-1">
+                        <input
+                            type="date"
+                            value={newLead.followUpReminder}
+                            onChange={e => setNewLead({
+                                ...newLead,
+                                followUpReminder: e.target.value
+                            })}
+                            className="flex-1 px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-mint focus:border-mint" />
+                        <button
+                            onClick={handleAddLead}
+                            disabled={isAddingLead || !newLead.productName || !newLead.name}
+                            className="px-2 py-1 text-xs bg-mint text-teal-800 rounded hover:bg-mint/80 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
+                            <ApperIcon name="Plus" size={12} />Add
+                                            </button>
+                    </div>
+                </td>
+            </tr>
+            {/* Existing leads */}
+            {(leads || []).map((lead, index) => <motion.tr
+                className="bg-gray-50 hover:bg-gray-100"
+                initial={{
+                    opacity: 0,
+                    y: 10
+                }}
+                animate={{
+                    opacity: 1,
+                    y: 0
+                }}
+                transition={{
+                    delay: (index + 1) * 0.03
+                }}>
+                {showBulkActions && <td className="px-3 py-2 text-sm w-12">
+                    <input
+                        type="checkbox"
+                        checked={selectedLeads.includes(lead.Id)}
+                        onChange={e => handleSelectLead(lead.Id, e.target.checked)}
+                        className="h-4 w-4 text-mint focus:ring-mint border-gray-300 rounded" />
+                </td>}
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "productName", lead.productName)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "name", lead.name)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "websiteUrl", lead.websiteUrl)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "teamSize", lead.teamSize, "text", TEAM_SIZES)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "arr", lead.arr, "number")}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "category", lead.category, "text", BUSINESS_CATEGORIES)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "linkedinUrl", lead.linkedinUrl)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "status", lead.status, "text", STATUS_OPTIONS)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "fundingType", lead.fundingType, "text", FUNDING_TYPES)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "edition", lead.edition, "text", EDITIONS)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "salesRep", lead.salesRep)}</td>
+                <td className="px-3 py-2 text-sm">{renderCell(lead, "followUpReminder", lead.followUpReminder, "date")}</td>
+                <td className="px-3 py-2 text-sm">
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditLead(lead)}
+                            className="h-8 w-8 p-0 text-gray-600 hover:text-teal-600">
+                            <ApperIcon name="Edit" size={16} />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteLead(lead)}
+                            className="h-8 w-8 p-0 text-gray-600 hover:text-red-600">
+                            <ApperIcon name="Trash2" size={16} />
+                        </Button>
+                    </div>
+                </td>
+            </motion.tr>)}
         </tbody>
-      </table>
-    </div>
+    </table>
+</div>
   );
 };
 
